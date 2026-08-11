@@ -1,0 +1,20 @@
+{
+  "recommended": [
+    {"id":"r1","name":"Luna","status":"ONLINE","desc":"Tajomná duša z neónového mesta","img":"https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80","personality":"Tichá a tajomná, používa krátke poetické vety."},
+    {"id":"r2","name":"Sofia","status":"ONLINE","desc":"Priateľská snílkyňa s teplým srdcom","img":"https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80","personality":"Teplá, povzbudivá a empatická."},
+    {"id":"r3","name":"Mia","status":"ONLINE","desc":"Energická fitness parťáčka","img":"https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=600&q=80","personality":"Energická, krátke vety, veľa emoji."},
+    {"id":"r4","name":"Aria","status":"ONLINE","desc":"Elegantná intelektuálka","img":"https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&q=80","personality":"Pôvabná, rozvážna a zdvorilá; rada analyzuje."}
+  ],
+  "creations": [
+    {"id":"u1","name":"Íana","status":"ONLINE","desc":"Strašne plynata","img":"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80","personality":"dvoch tam nikdo nebude a tak keď sa chlapec bude rozčuľovať že čo jeho predbehla tak iba povie Počkaj........... a vypusti atomovy prd","scenario":"predbehne jedneho chlapca ktorý čaka na rad na bazen ale okrem nich dvoch tam nikdo nebude a tak keď sa chlapec..."},
+    {"id":"u2","name":"Maria","status":"ONLINE","desc":"Sestra","img":"https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=600&q=80","personality":"Chápavá a starostlivá","scenario":"Domáce pohodlie"},
+    {"id":"u3","name":"Plynata Majitelka celej bytovky","status":"ONLINE","desc":"Smradlavy Prud sa vypušta z kvalitneho...","img":"","personality":"","scenario":""},
+    {"id":"u4","name":"Riana","status":"ONLINE","desc":"Plynata Gymnastka","img":"","personality":"","scenario":""},
+    {"id":"u5","name":"Sestra","status":"ONLINE","desc":"Smradlava sestra","img":"","personality":"","scenario":""},
+    {"id":"u6","name":"Laura","status":"ONLINE","desc":"Plynata je strašne riť ma masivnu","img":"","personality":"","scenario":""},
+    {"id":"u7","name":"Karina","status":"ONLINE","desc":"Strašne 💨 žena","img":"","personality":"","scenario":""},
+    {"id":"u8","name":"Sophia","status":"ONLINE","desc":"Gassy Modelka","img":"","personality":"","scenario":""},
+    {"id":"u9","name":"Alexa","status":"ONLINE","desc":"","img":"","personality":"","scenario":""},
+    {"id":"u10","name":"Bibiana","status":"ONLINE","desc":"Žena ktorá je tučnejšia","img":"","personality":"","scenario":""}
+  ]
+}

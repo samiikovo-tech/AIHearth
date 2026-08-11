@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="sk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>NEONHEART - AI Spoločníčky</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#0b071e" />
+  <link rel="manifest" href="/manifest.webmanifest">
+  <style>
+    :root{--bg:#0b071e;--card-bg:rgba(22,14,45,0.7);--accent-pink:#ff2a8d;--accent-cyan:#00f0ff;--text:#fff;--muted:#9a94b8;--font-title:'Orbitron',sans-serif;--font-body:'Rajdhani',sans-serif}
+    *{box-sizing:border-box;margin:0;padding:0;font-family:var(--font-body)}
+    body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:100px}
+    header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:rgba(11,7,30,0.85);position:sticky;top:0}
+    .logo{display:flex;align-items:center;gap:10px}
+    .logo-icon{width:36px;height:36;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--accent-pink),#9d4edd)}
+    .logo-text{font-family:var(--font-title);font-weight:800;background:linear-gradient(90deg,#fff,var(--accent-pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .container{max-width:980px;margin:18px auto;padding:0 16px}
+    h1{font-size:28px;margin-bottom:6px}
+    p.lead{color:var(--muted);margin-bottom:18px}
+    .section-header{color:var(--accent-cyan);font-weight:700;font-size:13px;margin:12px 0}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+    .card{border-radius:12px;overflow:hidden;background:var(--card-bg);height:200px;position:relative;cursor:pointer;border:1px solid rgba(255,255,255,0.06)}
+    .card img{width:100%;height:100%;object-fit:cover;display:block}
+    .badge{position:absolute;top:10px;left:10px;background:rgba(11,7,30,0.6);padding:6px 9px;border-radius:999px;color:var(--accent-cyan);font-weight:700;font-size:12px}
+    .overlay{position:absolute;bottom:0;left:0;right:0;padding:10px;background:linear-gradient(0deg, rgba(11,7,30,0.95), transparent)}
+    .overlay .title{font-weight:700}
+    /* chat */
+    .chat-modal{display:none;position:fixed;inset:0;background:rgba(3,3,10,0.75);z-index:90;align-items:center;justify-content:center;padding:18px}
+    .chat-panel{background:linear-gradient(180deg, rgba(11,7,30,0.98), rgba(11,7,30,0.95));width:100%;max-width:900px;height:84vh;border-radius:12px;display:flex;flex-direction:column}
+    .chat-header{display:flex;align-items:center;padding:12px;border-bottom:1px solid rgba(255,255,255,0.03)}
+    .chat-body{flex:1;padding:12px;overflow:auto;display:flex;flex-direction:column;gap:10px}
+    .chat-input{display:flex;gap:8px;padding:12px;border-top:1px solid rgba(255,255,255,0.03)}
+    textarea{flex:1;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.03);color:var(--text);min-height:44px}
+    button{background:linear-gradient(90deg,#3a7bd5,#00d2ff);border:none;color:#fff;padding:10px 14px;border-radius:10px;cursor:pointer}
+    .message{max-width:70%;padding:10px;border-radius:10px}
+    .user{align-self:flex-end;background:linear-gradient(90deg,var(--accent-pink),var(--accent-cyan));color:#0b071e}
+    .bot{align-self:flex-start;background:rgba(255,255,255,0.04)}
+    .meta{font-size:12px;color:var(--muted);margin-top:6px}
+    /* forms modal */
+    .modal{display:none;position:fixed;inset:0;background:rgba(11,7,30,0.9);z-index:80;padding:18px}
+    .modal-inner{max-width:720px;margin:0 auto;background:transparent}
+    .form-group{margin-bottom:12px}
+    .form-input,.form-textarea{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.03);color:var(--text)}
+    .bottom-nav{position:fixed;bottom:0;left:0;right:0;height:64px;background:rgba(11,7,30,0.9);display:flex;align-items:center;justify-content:space-around;padding:8px}
+    .small{font-size:13px;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo"><div class="logo-icon">✦</div><div class="logo-text">NEONHEART</div></div>
+    <div class="actions"><button onclick="openCreate()" aria-label="Create">+</button></div>
+  </header>
+  <main class="container">
+    <h1>Vyber si <strong>spoločníčku</strong></h1>
+    <p class="lead">Klikni na profil a začni chatovať. Podrž prst na svojej postave pre editáciu avatara.</p>
+
+    <div>
+      <div class="section-header">ODPORÚČANÉ</div>
+      <div class="grid" id="recommended-grid"></div>
+    </div>
+
+    <div>
+      <div class="section-header">TVOJE VÝTVORY</div>
+      <div class="grid" id="creations-grid"></div>
+    </div>
+  </main>
+
+  <!-- create modal -->
+  <div class="modal" id="create-modal" role="dialog" aria-modal="true">
+    <div class="modal-inner">
+      <h2 id="create-title">✦ Vytvor postavu</h2>
+      <p class="small">Nová AI dievčina – Nahraj vlastný obrázok alebo nechaj AI vytvoriť portrét.</p>
+      <form id="create-form">
+        <div class="form-group"><label>MENO</label><input id="f-name" class="form-input" placeholder="Ivy" required></div>
+        <div class="form-group"><label>KRÁTKY POPIS</label><input id="f-desc" class="form-input" placeholder="Nočná DJ-ka s tajomstvom" required><div class="small">Jedna veta na kartu</div></div>
+        <div class="form-group"><label>OSOBNOSŤ</label><textarea id="f-personality" class="form-textarea" placeholder="25-ročná DJ-ka... (10–1000 znakov)"></textarea><div class="small">Ako sa správa, čo miluje, ako píše (10–1000 znakov)</div></div>
+        <div class="form-group"><label>SCENÁR</label><textarea id="f-scenario" class="form-textarea" placeholder="Stretli sme sa v neónovom bare..."></textarea><div class="small">Situácia / prostredie (voliteľné)</div></div>
+        <div class="form-group"><label>OBRÁZOK</label><input id="f-img" class="form-input" placeholder="https://..." type="url"><div style="margin-top:6px;display:flex;gap:8px"><button type="button" onclick="uploadImage()">Nahrať vlastný</button><button type="button" onclick="generateAI()">Generovať AI</button></div><div class="small">Klikni pre nahranie (PNG, JPG, WEBP · max 5MB)</div></div>
+        <div style="display:flex;gap:8px"><button type="submit">✦ Vytvoriť a začať chat</button><button type="button" onclick="closeCreate()">Zrušiť</button></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- chat modal -->
+  <div class="chat-modal" id="chat-modal" role="dialog" aria-modal="true">
+    <div class="chat-panel">
+      <div class="chat-header">
+        <div style="width:44px;height:44px;border-radius:8px;overflow:hidden;margin-right:10px"><img id="chat-avatar" src="" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+        <div>
+          <div id="chat-name">Chat</div>
+          <div class="small" id="chat-sub"></div>
+        </div>
+        <div style="margin-left:auto"><button onclick="closeChat()">✕</button></div>
+      </div>
+      <div class="chat-body" id="chat-body"><div id="messages"></div></div>
+      <div class="chat-input"><textarea id="chat-input" placeholder="Napiš správu..."></textarea><button id="send-btn">Poslať</button></div>
+    </div>
+  </div>
+
+  <div class="bottom-nav"><button>‹ Chat</button><button>🎙</button><button>•••</button><button>• Publish</button></div>
+
+  <script>
+    // Simple client app
+    let recommended = []
+    let creations = []
+    let currentChar = null
+    let conversations = {}
+
+    async function init(){
+      recommended = await (await fetch('/characters_seed.json')).json().then(r=>r.recommended)
+      creations = await (await fetch('/characters_seed.json')).json().then(r=>r.creations)
+      const saved = localStorage.getItem('aih_creations_v1')
+      if(saved) creations = JSON.parse(saved)
+      render()
+      // register sw
+      if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(()=>{})}
+    }
+
+    function render(){
+      const rec = document.getElementById('recommended-grid')
+      const cre = document.getElementById('creations-grid')
+      rec.innerHTML = recommended.map(c=>cardHTML(c,'recommended')).join('')
+      cre.innerHTML = creations.map(c=>cardHTML(c,'user')).join('')
+    }
+
+    function cardHTML(c,type){
+      const img = c.img || '/placeholder.png'
+      return `<div class="card" tabindex="0" onclick="openChat('${c.id}','${type}')"><img src="${img}" alt="${c.name}"><div class="badge">${c.status||'ONLINE'}</div><div class="overlay"><div class="title">${escape(c.name)}</div><div class="small">${escape(c.desc||'')}</div></div></div>`
+    }
+
+    function escape(s){return (s||'').replace(/[&<>"']/g, ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[ch]))}
+
+    // Create flow
+    function openCreate(){document.getElementById('create-modal').style.display='block'}
+    function closeCreate(){document.getElementById('create-modal').style.display='none'}
+    document.getElementById('create-form').addEventListener('submit',e=>{e.preventDefault();const id='u_'+Date.now();const obj={id,name:document.getElementById('f-name').value,desc:document.getElementById('f-desc').value,img:document.getElementById('f-img').value,personality:document.getElementById('f-personality').value,scenario:document.getElementById('f-scenario').value,status:'ONLINE'};creations.unshift(obj);localStorage.setItem('aih_creations_v1',JSON.stringify(creations));closeCreate();render();openChat(obj.id,'user')})
+
+    // Chat flow
+    function openChat(id,type){
+      const pool = type==='recommended'?recommended:creations
+      const char = pool.find(c=>c.id===id)
+      if(!char) return
+      currentChar = char
+      document.getElementById('chat-modal').style.display='flex'
+      document.getElementById('chat-avatar').src = char.img||''
+      document.getElementById('chat-name').innerText = char.name
+      document.getElementById('chat-sub').innerText = char.desc||''
+      renderConversation(id)
+    }
+
+    function closeChat(){document.getElementById('chat-modal').style.display='none';document.getElementById('messages').innerHTML='';currentChar=null}
+
+    function renderConversation(id){
+      const msgs = conversations[id]||[]
+      const el = document.getElementById('messages')
+      el.innerHTML = msgs.map(m=>`<div class="message ${m.sender==='user'?'user':'bot'}">${escape(m.text)}<div class='meta'>${new Date(m.time).toLocaleTimeString()}</div></div>`).join('')
+      el.parentElement.scrollTop = el.parentElement.scrollHeight
+    }
+
+    document.getElementById('send-btn').addEventListener('click',sendMessage)
+    document.getElementById('chat-input').addEventListener('keydown',e=>{if(e.key==='Enter' && !e.shiftKey){e.preventDefault();sendMessage()}})
+
+    async function sendMessage(){
+      const text = document.getElementById('chat-input').value.trim()
+      if(!text || !currentChar) return
+      const id = currentChar.id
+      const msg = {sender:'user',text,time:Date.now()}
+      conversations[id]=conversations[id]||[]
+      conversations[id].push(msg)
+      renderConversation(id)
+      document.getElementById('chat-input').value=''
+      // show typing
+      const typingId = 'typing-'+Date.now()
+      const el = document.getElementById('messages')
+      const tnode = document.createElement('div');tnode.className='message bot';tnode.innerHTML='<em>...</em>'
+      el.appendChild(tnode);el.parentElement.scrollTop = el.parentElement.scrollHeight
+
+      try{
+        const resp = await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({character:currentChar, message:text, convo:conversations[id]})})
+        const data = await resp.json()
+        const botText = data?.reply || 'Prepáč, niečo sa pokazilo.'
+        conversations[id].push({sender:'bot',text:botText,time:Date.now()})
+        saveConvos()
+      }catch(err){conversations[id].push({sender:'bot',text:'Chyba pri volaní API.',time:Date.now()})}
+      // remove typing and re-render
+      renderConversation(id)
+    }
+
+    function saveConvos(){localStorage.setItem('aih_conversations_v1',JSON.stringify(conversations))}
+
+    // helpers for image upload / AI generate (stubs)
+    function uploadImage(){alert('Pick an image file in the native app or paste a URL into the field.')}
+    function generateAI(){alert('AI image generation will be available after backend setup.')}
+
+    // init
+    window.addEventListener('load',init)
+  </script>
+</body>
+</html>
