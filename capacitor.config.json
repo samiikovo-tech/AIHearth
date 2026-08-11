@@ -1,0 +1,7 @@
+{
+  "appId": "com.samiikovo.aihearth",
+  "appName": "NEONHEART",
+  "bundledWebRuntime": false,
+  "webDir": "./",
+  "plugins": {}
+}

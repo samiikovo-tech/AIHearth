@@ -1,28 +1,52 @@
 # NEONHEART (AIHearth)
 
-This repository contains a Progressive Web App (PWA) + simple Express proxy to integrate with OpenAI's Chat Completions API. It is prepared to be wrapped as a mobile app using Capacitor.
+This repository contains a Progressive Web App (PWA) + simple Express proxy to integrate with OpenAI's Chat Completions API. It is prepared to be wrapped as a mobile app using Capacitor. This feature branch (feature/mobile-chatgpt) adds mobile scaffolding, moderation and image generation endpoints, and client settings to support user-provided OpenAI keys.
 
-Getting started (local):
+Quick start (local)
 
 1. Install dependencies
 
    npm install
 
-2. Create `.env` file in repo root with your OpenAI key:
+2. Copy env example and add your OpenAI key (optional for server proxy):
 
-   OPENAI_API_KEY=sk-...
+   cp .env.example .env
+   # edit .env and set OPENAI_API_KEY=sk-...
 
 3. Start server
 
    npm start
 
-Open http://localhost:3000 in your browser. You can install as PWA on mobile or wrap with Capacitor for native builds.
+4. Open http://localhost:3000
 
-Capacitor (optional):
+Using user-supplied API key in the app (insecure for public builds)
 
-- Install Capacitor and add platforms: `npm i @capacitor/core @capacitor/cli` then `npx cap init` and `npx cap add android`.
+- The app supports two modes:
+  - Server proxy: client calls /api/chat on the server; server uses OPENAI_API_KEY from .env (recommended)
+  - Local key: user pastes their OpenAI API key in Settings; the client will call OpenAI directly. This is less secure — do not distribute builds with embedded keys.
 
-Security:
+Mobile (Capacitor)
 
-- Do NOT commit your API key. Use environment variables or host the proxy on a secure server (Vercel/Render/Cloud Run).
+1. Install Capacitor CLI & core (dev deps):
 
+   npm i @capacitor/core @capacitor/cli --save-dev
+
+2. Initialize Capacitor (example AppId):
+
+   npx cap init "NEONHEART" com.samiikovo.aihearth
+
+3. Add Android / iOS:
+
+   npx cap add android
+   npx cap add ios
+
+4. After building front-end, copy assets:
+
+   npx cap copy
+   npx cap open android
+   npx cap open ios
+
+Security & moderation
+
+- The server provides /api/moderation and performs moderation before forwarding user messages or image prompts to OpenAI. You should keep moderation enabled in production.
+- NEVER commit your OpenAI API key to the repo. Use environment variables or secret management in your hosting provider.

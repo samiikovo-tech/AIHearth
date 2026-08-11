@@ -1,0 +1,21 @@
+<!-- Settings modal (inserted into index.html via feature branch) -->
+<div class="modal" id="settings-modal" role="dialog" aria-modal="true" style="display:none">
+  <div class="modal-inner" style="max-width:520px;margin:40px auto;background:transparent;padding:16px">
+    <h3>Nastavenia</h3>
+    <div class="form-group">
+      <label>Režim API</label>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <label><input type="radio" name="api-mode" value="server" checked> Použiť server (odporúčané)</label>
+        <label><input type="radio" name="api-mode" value="local"> Použiť vlastný OpenAI kľúč</label>
+      </div>
+      <div class="small">Server proxy je bezpečnejší. Lokálny kľúč bude uložený v lokálnom úložisku zariadenia.</div>
+    </div>
+    <div class="form-group" id="local-key-group" style="display:none">
+      <label>Tvoj OpenAI kľúč</label>
+      <input id="local-openai-key" class="form-input" placeholder="sk-...">
+      <div class="small">Tento kľúč sa uloží lokálne v prehliadači / natívnom úložisku (neodporúča sa pre verejné buildy).</div>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-top:12px"><button onclick="saveSettings()">Uložiť</button><button onclick="closeSettings()">Zrušiť</button></div>
+  </div>
+</div>
