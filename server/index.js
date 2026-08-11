@@ -43,11 +43,30 @@ app.post('/api/chat', async (req, res) => {
       return res.json({reply});
     }
 
-    const resp = await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${OPENAI_KEY}`},body:JSON.stringify({model:process.env.OPENAI_MODEL||'gpt-3.5-turbo',messages,max_tokens:250,temperature:0.9})});
+    // Prefer OPENAI_MODEL env or default to gpt-4 as requested
+    const MODEL = process.env.OPENAI_MODEL || 'gpt-4';
+
+    const resp = await fetch('https://api.openai.com/v1/chat/completions',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':`Bearer ${OPENAI_KEY}`
+      },
+      body:JSON.stringify({
+        model: MODEL,
+        messages,
+        max_tokens: 300,
+        temperature: 0.9
+      })
+    });
+
     const data = await resp.json();
     const text = data?.choices?.[0]?.message?.content || data?.error?.message || '';
     res.json({reply:text});
-  }catch(err){console.error(err);res.status(500).json({error:'server error'})}
+  }catch(err){
+    console.error(err);
+    res.status(500).json({error:'server error'});
+  }
 });
 
 const PORT = process.env.PORT||3000;
